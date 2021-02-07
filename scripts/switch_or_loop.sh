@@ -19,9 +19,10 @@ main() {
 		dismiss_session_list_page_from_view
 		exit 0
 	fi
-	if session_exists_prefix; then
+	if session_exists_grep; then
 		dismiss_session_list_page_from_view
-		tmux switch-client -t "$SESSION_NAME"
+		local session_found=$(tmux list-sessions | sed 's/:.*//' | grep "$SESSION_NAME"| head -n 1)
+		tmux switch-client -t "$session_found"
 	else
 		# goto command prompt again
 		tmux command -p session: "run '$CURRENT_DIR/switch_or_loop.sh \"%1\"'"
